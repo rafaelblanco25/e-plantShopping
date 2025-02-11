@@ -253,3 +253,7 @@ body {
         text-align: center; /* Align text to the center */
       }
   }
+
+svg text {
+    fill:#fff
+}

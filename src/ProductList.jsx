@@ -350,7 +350,7 @@ function ProductList() {
                     stroke-width="2"
                     id="mainIconPathAttribute"
                   ></path>
-                  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" color="white">{itemsInCart}</text>
+                  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">{itemsInCart}</text>
                 </svg>
               </h1>
             </a>
