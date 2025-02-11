@@ -2,12 +2,23 @@ import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
 import { addItem } from "./CartSlice";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 function ProductList() {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-  const [addedToCart, setAddedToCart] = useState({});
+//   const [addedToCart, setAddedToCart] = useState({});
   const dispatch = useDispatch();
+  const cart = useSelector(state => state.cart.items);
+  const addedToCart = useSelector(state => state.cart.addedTocart);
+  const [itemsInCart, setItemsInCart] = useState(cart.length);
+
+  useEffect(() => {
+    let quantity = 0;
+    cart.forEach((item) => {
+      quantity += item.quantity;
+    });
+    setItemsInCart(quantity);
+  }, [cart]);
 
   const plantsArray = [
     {
@@ -287,10 +298,10 @@ function ProductList() {
   };
   const handleAddToCart = (plant) => {
     dispatch(addItem(plant));
-    setAddedToCart((prevState) => ({
-        ...prevState,
-        [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
-      }));
+    // setAddedToCart((prevState) => ({
+    //   ...prevState,
+    //   [plant.name]: true, // Set the product name as key and value as true to indicate it's added to cart
+    // }));
   };
   return (
     <div>
@@ -339,6 +350,7 @@ function ProductList() {
                     stroke-width="2"
                     id="mainIconPathAttribute"
                   ></path>
+                  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" color="white">{itemsInCart}</text>
                 </svg>
               </h1>
             </a>
@@ -348,8 +360,8 @@ function ProductList() {
       {!showCart ? (
         <div className="product-grid">
           {plantsArray.map((category, index) => (
-            <div className="category" key={index}>
-              <h1>{category.category}</h1>
+            <div key={index}>
+              <div className="plantname_heading"><h1 className="plant_heading">{category.category}</h1></div>
               <div className="product-list">
                 {category.plants.map((plant, plantIndex) => (
                   <div className="product-card" key={plantIndex}>
@@ -362,12 +374,15 @@ function ProductList() {
                     <div className="product-description">
                       {plant.description}
                     </div>
-                    <div className="product-cost">{plant.cost}</div>
+                    <div className="product-price">{plant.cost}</div>
                     <button
-                      className="product-button"
+                      className={"product-button" + (addedToCart[plant.name] ? " added-to-cart" : "")}
                       onClick={() => handleAddToCart(plant)}
+                      disabled={addedToCart[plant.name]}
                     >
-                      Add to Cart
+                      {addedToCart[plant.name]
+                        ? "Added to Cart"
+                        : "Add to Cart"}
                     </button>
                   </div>
                 ))}
